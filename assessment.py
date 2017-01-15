@@ -89,15 +89,20 @@ def word_length_sorted(words):
         [(2, ['ok']), (9, ['porcupine'])]
     """
 
+    # UNSOLVED
+
     word_length = []
+    used_lengths = []
 
     for word in words:
-        if word in word_length:
-            x
+        if len(word) in used_lengths:
+            # [i for i, value in enumerate(L) if value[0] == len(word)]
         else:
-            word_length.append(i, word)
+            used_lengths.append(len(word))
+            word_length_tuple = (len(word), [word])
+            word_length.append(word_length_tuple)
 
-    return []
+    return sorted(word_length)
 
 
 def translate_to_pirate_talk(phrase):
@@ -213,7 +218,34 @@ def kids_game(names):
     good solutions here will definitely require a dictionary.
     """
 
-    return []
+    # for every word, create dictionary of first_letter: word
+    # set new first_letter to current word[-1]
+    # lookup will be by first_letter
+
+    first_word = names[0]
+    first_letter_dictionary = {}
+
+    for word in names:
+        first_letter_dictionary[word] = word[0]
+    print first_letter_dictionary
+
+    game_list = []
+    game_list.append(first_word)
+    current_word = game_list[-1]
+    current_first_letter = current_word[-1]
+    print current_first_letter
+
+    while True:     # while no new entries exist with value of current_first_letter
+        # find entry with value of current_first_letter
+        current_word = (key for key, value in first_letter_dictionary.items() if value == "current_first_letter")
+        print current_word
+        game_list.append(current_word)
+        current_first_letter = current_word[-1]
+
+        # if current_first_letter not in first_letter_dictionary:
+        #     return False
+
+    return game_list
 
 #####################################################################
 # You can ignore everything below this.
