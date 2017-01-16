@@ -89,20 +89,19 @@ def word_length_sorted(words):
         [(2, ['ok']), (9, ['porcupine'])]
     """
 
-    # UNSOLVED
-
-    word_length = []
-    used_lengths = []
+    word_length_dict = {}
 
     for word in words:
-        if len(word) in used_lengths:
-            # [i for i, value in enumerate(L) if value[0] == len(word)]
+        length = len(word)
+        if length in word_length_dict:
+            word_length_dict[length].append(word)
+            word_length_dict[length].sort()         # sort words in each list
         else:
-            used_lengths.append(len(word))
-            word_length_tuple = (len(word), [word])
-            word_length.append(word_length_tuple)
+            word_length_dict[length] = [word]
 
-    return sorted(word_length)
+    word_length_list = [(key, value) for key, value in word_length_dict.items()]
+
+    return sorted(word_length_list)                 # sort tuples by number
 
 
 def translate_to_pirate_talk(phrase):
@@ -218,34 +217,49 @@ def kids_game(names):
     good solutions here will definitely require a dictionary.
     """
 
-    # for every word, create dictionary of first_letter: word
-    # set new first_letter to current word[-1]
-    # lookup will be by first_letter
+    # for every word, create dictionary of first letter: [word]
+    # set new first letter to current word[-1]
+    # lookup will be by first letter
+    # value will be list of words starting with first letter
 
-    first_word = names[0]
-    first_letter_dictionary = {}
+    first_word = names[0]                           # set first word entered
+    first_letter_dictionary = {}                    # dictionary to hold word:first_letter
 
-    for word in names:
-        first_letter_dictionary[word] = word[0]
-    print first_letter_dictionary
+    for word in names:                              # iterate through words entered
+        if word[0] in first_letter_dictionary:
+            first_letter_dictionary[word[0]] += [word]
+        else:
+            first_letter_dictionary[word[0]] = [word]     # add {word: first_letter} to dictionary
 
-    game_list = []
-    game_list.append(first_word)
-    current_word = game_list[-1]
-    current_first_letter = current_word[-1]
-    print current_first_letter
+    game_list = []                                  # list to hold final product
+    game_list.append(first_word)                    # add first word
+    current_word = game_list[-1]                    # current_word = last word in game_list
+    new_first_letter = current_word[-1]             # new_first_letter = last character of current_word
 
-    while True:     # while no new entries exist with value of current_first_letter
-        # find entry with value of current_first_letter
-        current_word = (key for key, value in first_letter_dictionary.items() if value == "current_first_letter")
-        print current_word
-        game_list.append(current_word)
-        current_first_letter = current_word[-1]
+    game_incomplete = True
 
-        # if current_first_letter not in first_letter_dictionary:
-        #     return False
+    while game_incomplete:                          # while entries exist with key new_first_letter
+        try:
+            new_word_list = first_letter_dictionary[new_first_letter]
+        except:
+            return game_list
+
+        for word in new_word_list:
+            if word in game_list:                   # if word in list has been used in game
+                used_word_index = new_word_list.index(word)
+                new_word_list.pop(used_word_index)  # remove word from list
+
+        if not new_word_list:                       # if list of unused possible words is empty
+            game_incomplete = False                 # break loop
+
+        else:                                       # if possible words remain
+            new_word = new_word_list[0]             # set new word to first word in possibility list
+            new_first_letter = new_word[-1]
+
+            game_list.append(new_word)              # add new word to game_list
 
     return game_list
+
 
 #####################################################################
 # You can ignore everything below this.
